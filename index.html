@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boolek</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+    
+  	  @media (max-width: 540px){
+    	  #logo{
+        	width: 25%;
+    	}
+	  }
+
+      @media (min-width: 540px){
+          #logo{
+              width: 10%;
+          }
+      }
+
+      .navbar{
+          box-shadow: 2px 2px 5px #000;
+          opacity: .9;
+      }
+
+      .navbar .nav-item .nat-link{
+          color: #fff;
+      }
+
+      .main-header{
+          position: relative;
+          background: url('https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihZODkJDEdUwI9e5B9dBJGFALyZmppDxT9IUvLFkKrU4J5-jLH5YLqTMJrY6QbwsSZt4HcLckohKCxuArUJ9c57pdD3RUTDS6C4=w1325-h696-rw-v1') no-repeat;
+          background-size: cover;
+          min-height: 500px;
+      }
+
+      .background-overlay{
+          position: absolute;
+          background-color: rgba(19, 15, 64, 0.7);
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+
+      .form-control, .btn {
+          border-radius: 0;
+      }
+
+      .team, footer{
+          background-color: #30336b;
+      }
+
+      .justificado{
+        text-align: justify; 
+        text-justify: inter-word;
+      }
+
+      .main-logo{
+        margin-top: -5%;
+      }
+
+      p{
+        font-size: 18px;
+      }
+
+  	</style>
+  </head>
+<body>
+    <!--NAVIGATOR-->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand w-50" href="/">
+                <img id="logo" src="https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihYhBaNzWz6QVkC88cgvPxDYyDYpstu2OMGQOM1otrZGrIepTgLYjwuLFCSXRMCqeuEJ5XLq9FLv6WABMRNLGiuuaLvajp9e-v0=w1325-h696"/>
+                <h6 class="d-inline">BOOLEK</h6>
+            </a>
+            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <p id="idioma" style="cursor: pointer; font-weight: bold;" class="nav-link font-weight-bold">English</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="body">
+
+    </div>
+
+    <!--TEAM-->
+    <section class="team text-center">
+        <div class="container p-5">
+            <h1 class="text-white">Social Media</h1>
+            <div class="trow d-flex justify-content-center">
+                <div class="col-md-3">
+                    <div class="bg-dark card">
+                        <div class="card-body">
+                            <div class="d-flex flex-row justify-content-center">
+                                <div class="p-4">
+                                    <a href="https://www.tiktok.com/@_boolek_" target="_blank">
+                                        <i style="color: white; transform: scale(2);" class="fa-brands fa-tiktok"></i>
+                                    </a>
+                                </div>
+                                <div class="p-4">
+                                    <a href="https://www.youtube.com/@BOOLEK-fp9wx" target="_blank">
+                                        <i style="color: crimson; transform: scale(2);" class="fa-brands fa-youtube"></i>
+                                    </a>
+                                </div>
+                                <div class="p-4">
+                                    <a href="https://www.instagram.com/boolek1989/" target="_blank">
+                                        <i style="color: hotpink; transform: scale(2);" class="fab fa-instagram"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+         <div class="container p-3 text-center text-white">
+            <p>copyright&copy<script>
+                document.write(new Date().getFullYear())
+            </script></p>
+        </div>
+    </footer>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        var language = {};
+        window.onload = () => {
+            changeLanguage();
+        }
+
+        document.getElementById("idioma")
+        .addEventListener("click", () => {
+            if( localStorage.getItem("idioma") == "EN" ){
+                localStorage.setItem("idioma", "ES");
+                document.getElementById("idioma").innerText = "Español";
+                changeLanguage();
+            }else{
+                localStorage.setItem("idioma", "EN");
+                document.getElementById("idioma").innerText = "English";
+                changeLanguage();
+            }
+        })
+
+        function changeLanguage(){
+
+            if( localStorage.getItem("idioma") == null || localStorage.getItem("idioma") == "EN" ){
+                document.getElementById("idioma").innerText = "English";
+                localStorage.setItem("idioma","EN");
+                //Inglés
+                language = {
+                    presentacion: `
+                        At BOOLEK, we specialize in developing innovative software that integrates the latest in deep learning and artificial intelligence, helping your business reach new heights. Our passion for technology and innovation is reflected in every solution we create, always at an affordable price.
+                    `,
+                    smartver_descripcion:`
+                    Smartver is an ideal tool for waiting rooms that can run locally on Windows. 
+                    It integrates the ability to stream your voice into the waiting room from your PC or phone's microphone. 
+                    Additionally, it can inform through a synthesized voice that converts text to speech in any language. 
+                    Furthermore, you can choose personalized notification sounds. This tool includes a smart camera module 
+                    that utilizes your webcam to detect the presence of individuals with suspicious objects.
+                    `,
+                    titulo:"Products",
+                    products:[
+                        {
+                            descripcion: "Ideal for waiting rooms",
+                            accion: "Purchase Now"  
+                        },
+                        {
+                            descripcion: "For advertising announcements",
+                            accion: "Purchase Now"  
+                        },
+                        {
+                            descripcion: "A very simple and cheap tool",
+                            accion: "Purchase Now"   
+                        },
+                        {
+                            descripcion: "Pack with all 3 versions of Smartver at an affordable price.",
+                            accion: "Purchase Now"
+                        },
+                        {
+                            descripcion: "Free application to manage Smartver from your smartphone.",
+                            accion: "Download"
+                        },
+                        {
+                            descripcion: "Free application to open the waiting room on your SmartTV.",
+                            accion: "Download"
+                        },
+                        {
+                            descripcion: "Allows you to screen share from your PC to your SMART TV.",
+                            accion: "Included in SMARTVER Waiting Room and Advertising Screen."
+                        }
+                    ]
+                }   
+                
+            }else{
+
+                document.getElementById("idioma").innerText = "Español";
+                localStorage.setItem("idioma","ES");  
+                //Español
+                language = {
+                    presentacion: `
+                        En BOOLEK, nos dedicamos a desarrollar software innovador que integra lo último en deep learning e inteligencia artificial, ayudando a tu negocio a alcanzar nuevas alturas. Nuestra pasión por la tecnología y la innovación se refleja en cada solución que creamos, siempre a un precio accesible.
+                    `,
+                    smartver_descripcion:`
+                        Smartver es una herramienta ideal para salas de espera que puede ejecutarse en Windows de manera local.
+                        Integra la capacidad de transmitir desde el <b>micrófono de su PC o teléfono</b>, su voz en la sala de espera,
+                        tambien puede informar mediante una <b>voz sintetizada que convierte texto a voz en cualquier idioma</b>,
+                        ademas puede elegir <b>sonidos de notificación personalizados</b>.
+                        Esta herramienta incluye un módulo de <b>cámara inteligente</b> que utiliza su cámara web,
+                        para detectar la presencia de personas que tengan objetos sospechosos. 
+                    `,
+                    titulo:"Productos",
+                    products:[
+                        {
+                            descripcion: "Ideal para salas de espera",
+                            accion: "Adquirir"  
+                        },
+                        {
+                            descripcion: "Para anuncios publicitarios",
+                            accion: "Adquirir"  
+                        },
+                        {
+                            descripcion: "Una versión muy simple y muy barata",
+                            accion: "Adquirir"   
+                        },
+                        {
+                            descripcion: "Pack con las 3 versiones de Smartver a un precio económico",
+                            accion: "Adquirir"
+                        },
+                        {
+                            descripcion: "Aplicación gratis para manejar Smartver desde su SmartPhone",
+                            accion: "Descargar"
+                        },
+                        {
+                            descripcion: "Aplicación gratis con la que podrá abrir la sala de espera en su SmartTV",
+                            accion: "Descargar"
+                        },
+                        {
+                            descripcion: "Pemite compartir la pantalla del PC a su SMART TV",
+                            accion: "Incluido en SMARTVER Waiting Room Y Advertising Screen"
+                        }
+                    ]
+                }
+
+            }      
+
+            document.getElementById("body").innerHTML = `
+                <!--HEADER-->
+                <header class="main-header">
+                <div class="background-overlay text-white py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="main-logo col-md-12 text-center justify-content-center ">
+                                <img style="transform: scale(0.7);" src="https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihYhBaNzWz6QVkC88cgvPxDYyDYpstu2OMGQOM1otrZGrIepTgLYjwuLFCSXRMCqeuEJ5XLq9FLv6WABMRNLGiuuaLvajp9e-v0=w1325-h696" alt="producto">
+                                <p style="font-size: 24px;">${language.presentacion}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </header>
+                <!--NEWSLETTER-->
+                <section class="bg-dark text-white py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h1>SMARTVER</h1>
+                                <p class="justificado">
+                                ${language.smartver_descripcion}
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/DHddTVPYIwE?si=CByTFjJCkT3a3DXE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--FEATURES-->
+                <section class="team py-5 text-center">
+                    <div class="container">
+                        <h1 class="text-white">${language.titulo}</h1>
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-md-4">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body">
+                                        <h1>Smartver Waiting Room V1.3</h1>
+                                        <p>${language.products[0].descripcion}</p>
+                                        <iframe style="position: relative; width: 100%;" height="315" src="https://www.youtube.com/embed/eoXjz5u39jA?si=CsYpqsjfV-uvKgry" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                        <a target="_blank" href="https://payhip.com/b/JlubA" class="btn btn-outline-secondary btn-lg text-white">
+                                            ${language.products[0].accion}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body">
+                                        <h1>Smartver Advertising Screen V1.4</h1>
+                                        <p>${language.products[1].descripcion}</p>
+                                        <iframe style="position: relative; width: 100%;" height="315" src="https://www.youtube.com/embed/9qUWYPUb5HI?si=d-1CEYdPccm3XHhl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                        <a target="_blank" href="https://payhip.com/b/vJ1Y3" class="btn btn-outline-secondary btn-lg text-white">
+                                            ${language.products[1].accion}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body">
+                                        <h1>Smartver Standard Edition V1.1</h1>
+                                        <p>${language.products[2].descripcion}</p>
+                                        <iframe style="position: relative; width: 100%;" height="315" src="https://www.youtube.com/embed/KSJRHITKrdg?si=juKQhBmLwU77IC4p" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                        <a target="_blank" href="https://payhip.com/b/XjHho" class="btn btn-outline-secondary btn-lg text-white">
+                                            ${language.products[2].accion}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-between pt-4">
+                            <div class="col-md-4">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body">
+                                        <h1>ALL IN ONE V2</h1>
+                                        <p>${language.products[3].descripcion}</p>
+                                        <img style="position: relative; width: 100%; height: 300px;" src="https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbBO3r_lfwXzNGB0ixEMDqCwbAeq4ogu9H8U_fhHxbHWjG5z2zc6r1jOsVuXU6CdW5BvsB9gav1RSWbpV16UbtOvU5PgQ_leeU=w1325-h696" alt="">
+                                        <a target="_blank" href="https://payhip.com/b/5h7ys" class="btn btn-outline-secondary btn-lg text-white">
+                                            ${language.products[3].accion}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body">
+                                        <h1>Smartver APP Android</h1>
+                                        <p>${language.products[4].descripcion}</p>
+                                        <img style="width: 200px; height: 250px;" src="https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpiha03f3L0HmFoLqxJdBZAtucHB_cdPab4B5IhyGZ0shumDuU_F4Wd-LKq0MCxqYGT5vGSQMuw0UW5_OXBx-398DLYhsXWt2g0A=w1325-h696-rw-v1" alt="">
+                                        <a target="_blank" href="https://drive.google.com/file/d/1dOtvbbNVjaLKRcgbKOCzAgBGRfjOFYC9/view?usp=drive_link" class="btn btn-outline-secondary btn-lg text-white">
+                                            ${language.products[4].accion}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body">
+                                        <h1>Smartver TV Android</h1>
+                                        <p>${language.products[5].descripcion}</p>
+                                        <img style="width: 300px; height: 250px;" src="https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihYlHMxPuUuDqcCMZaHzKHRn6aKwuohMsKRUlAj2L0RlwyCqn_uRm6QyQO0nos5n1hqZ_9d7tD4wqqUcjozFDpS5N0Fh3VSLz9A=w1325-h696-rw-v1" alt="">
+                                        <a target="_blank" href="https://drive.google.com/file/d/1NcVk1OL51Dqqa74jT3i78NKImDIUwa1P/view?usp=drive_link" class="btn btn-outline-secondary btn-lg text-white">
+                                            ${language.products[5].accion}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--SCREEN MIRROR-->
+                <section class="team text-center">
+                    <div class="container">
+                        <div class="row d-flex justify-content-center text-center">
+                            <div class="col-md-4 col-sm-12">
+                                <div class="card bg-dark text-white text-center">
+                                    <div class="card-body text-center">
+                                        <h1>Screen Mirror</h1>
+                                        <p>${language.products[6].descripcion}</p>
+                                        <iframe style="position: relative; width: 100%;" height="315" src="https://www.youtube.com/embed/juEO3fLzRrQ?si=xIrk8ZIuzQNUxoY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                        <a style="cursor: text; color: #fff; text-decoration: none;" href="#">
+                                            ${language.products[6].accion}
+                                        </a>                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>                 
+            `;
+        }
+    </script>
+</body>
+</html>
