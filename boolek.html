@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOLEK — AI Software</title>
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/boolekpage/boolek.github.io/main/logo.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #00f5ff;
+            --secondary: #7b2fff;
+            --accent: #ff2d78;
+            --bg: #020510;
+            --bg2: #060d1f;
+            --bg3: #0a1530;
+            --text: #c8d8f0;
+            --text-dim: #5a7090;
+            --glow: 0 0 20px rgba(0,245,255,0.4);
+            --glow-purple: 0 0 20px rgba(123,47,255,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* CUSTOM CURSOR */
+        .cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+            box-shadow: var(--glow);
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(0,245,255,0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.15s ease;
+        }
+
+        /* CANVAS */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            background: rgba(2,5,16,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,245,255,0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .nav-brand img { height: 36px; filter: brightness(1.2); }
+        .nav-brand span {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 20px;
+            color: var(--primary);
+            letter-spacing: 4px;
+            text-shadow: var(--glow);
+        }
+
+        .nav-right { display: flex; align-items: center; gap: 30px; }
+
+        .nav-links { display: flex; gap: 24px; list-style: none; }
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid rgba(0,245,255,0.3);
+            color: var(--primary);
+            padding: 6px 16px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .lang-btn:hover {
+            background: rgba(0,245,255,0.1);
+            box-shadow: var(--glow);
+        }
+
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .nav-hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 20px 60px;
+            z-index: 1;
+        }
+
+        .hero-grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+        }
+
+        .hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+        .hero-eyebrow {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 6px;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.3s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(48px, 9vw, 110px);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.5s forwards;
+        }
+        .hero-title .line1 { display: block; color: #fff; }
+        .hero-title .line2 {
+            display: block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.7s forwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.9s forwards;
+        }
+
+        .btn-primary-glow {
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-decoration: none;
+            text-transform: uppercase;
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-primary-glow:hover {
+            box-shadow: 0 0 40px rgba(0,245,255,0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-glow {
+            padding: 13px 35px;
+            background: transparent;
+            color: var(--primary);
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-decoration: none;
+            text-transform: uppercase;
+            border: 1px solid var(--primary);
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .btn-outline-glow:hover {
+            background: rgba(0,245,255,0.1);
+            box-shadow: var(--glow);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            animation: bounce 2s infinite;
+        }
+        .hero-scroll .line { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--primary), transparent); }
+
+        /* STATS */
+        .stats-bar {
+            position: relative;
+            z-index: 1;
+            background: var(--bg2);
+            border-top: 1px solid rgba(0,245,255,0.1);
+            border-bottom: 1px solid rgba(0,245,255,0.1);
+            padding: 30px 40px;
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: var(--glow);
+        }
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        /* SECTION BASE */
+        section { position: relative; z-index: 1; }
+
+        .section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 6px;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .section-title span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* PRODUCT SHOWCASE */
+        .product-showcase {
+            padding: 100px 40px;
+            background: var(--bg);
+        }
+        .showcase-inner { max-width: 1200px; margin: 0 auto; }
+
+        .showcase-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 120px;
+        }
+        .showcase-row.reverse { direction: rtl; }
+        .showcase-row.reverse > * { direction: ltr; }
+
+        .showcase-text .section-label { display: block; }
+
+        .showcase-text h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(24px, 3.5vw, 40px);
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .showcase-text p {
+            color: var(--text-dim);
+            font-size: 16px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+        .tag {
+            padding: 4px 14px;
+            border: 1px solid rgba(0,245,255,0.2);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--primary);
+            background: rgba(0,245,255,0.05);
+        }
+
+        .showcase-media {
+            position: relative;
+        }
+        .showcase-media::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), transparent);
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .showcase-media iframe,
+        .showcase-media img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            border: none;
+        }
+
+        /* PRODUCTS GRID */
+        .products-section {
+            padding: 100px 40px;
+            background: var(--bg2);
+        }
+        .products-inner { max-width: 1200px; margin: 0 auto; }
+        .products-header { text-align: center; margin-bottom: 60px; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: var(--bg3);
+            border: 1px solid rgba(0,245,255,0.08);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        .product-card:hover { border-color: rgba(0,245,255,0.3); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.5), var(--glow); }
+        .product-card:hover::before { transform: scaleX(1); }
+
+        .card-media {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #000;
+        }
+        .card-media iframe { width: 100%; height: 100%; border: none; }
+        .card-media img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); transition: filter 0.3s; }
+        .product-card:hover .card-media img { filter: brightness(1); }
+
+        .card-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(0,245,255,0.1);
+            border: 1px solid rgba(0,245,255,0.2);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: var(--primary);
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 14px;
+            line-height: 1.6;
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        .card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            background: transparent;
+            border: 1px solid rgba(0,245,255,0.3);
+            color: var(--primary);
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+        .card-action:hover {
+            background: rgba(0,245,255,0.1);
+            box-shadow: var(--glow);
+        }
+        .card-action.free {
+            border-color: rgba(123,47,255,0.4);
+            color: #a57fff;
+        }
+        .card-action.free:hover { background: rgba(123,47,255,0.1); box-shadow: var(--glow-purple); }
+
+        /* SOCIAL */
+        .social-section {
+            padding: 80px 40px;
+            background: var(--bg);
+            text-align: center;
+        }
+        .social-inner { max-width: 600px; margin: 0 auto; }
+
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-dim);
+            font-size: 22px;
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .social-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .social-link.tiktok::before { background: rgba(255,255,255,0.1); }
+        .social-link.youtube::before { background: rgba(220,38,38,0.2); }
+        .social-link.instagram::before { background: rgba(236,72,153,0.2); }
+        .social-link.kick::before { background: rgba(134,239,172,0.2); }
+        .social-link.twitch::before { background: rgba(167,139,250,0.2); }
+        .social-link:hover::before { opacity: 1; }
+        .social-link:hover { transform: translateY(-4px); }
+        .social-link.tiktok:hover { border-color: #fff; color: #fff; }
+        .social-link.youtube:hover { border-color: crimson; color: crimson; }
+        .social-link.instagram:hover { border-color: hotpink; color: hotpink; }
+        .social-link.kick:hover { border-color: greenyellow; color: greenyellow; }
+        .social-link.twitch:hover { border-color: #a78bfa; color: #a78bfa; }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg2);
+            border-top: 1px solid rgba(0,245,255,0.08);
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 4px;
+        }
+        .footer-copy {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+        @keyframes scanline {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100vh); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* SCANLINE EFFECT */
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,245,255,0.1), transparent);
+            pointer-events: none;
+            z-index: 5;
+            animation: scanline 8s linear infinite;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .nav-links { display: none; }
+            .nav-hamburger { display: flex; }
+
+            .stats-bar { gap: 30px; padding: 24px 20px; }
+
+            .showcase-row {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                direction: ltr !important;
+                margin-bottom: 70px;
+            }
+
+            .product-showcase, .products-section, .social-section { padding: 60px 20px; }
+
+            footer { justify-content: center; text-align: center; }
+        }
+
+        /* CORNER DECO */
+        .corner-tl, .corner-br {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+        .corner-tl { top: 0; left: 0; border-top: 2px solid var(--primary); border-left: 2px solid var(--primary); }
+        .corner-br { bottom: 0; right: 0; border-bottom: 2px solid var(--primary); border-right: 2px solid var(--primary); }
+    </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scanline"></div>
+<canvas id="particles-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+    <a class="nav-brand" href="/">
+        <img src="https://raw.githubusercontent.com/boolekpage/boolek.github.io/main/logo_sin_fondo.png" alt="Boolek">
+        <span>BOOLEK</span>
+    </a>
+    <div class="nav-right">
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#smartver" id="nav-smartver">SMARTVER</a></li>
+            <li><a href="#dubyet" id="nav-dubyet">DUBYET</a></li>
+            <li><a href="#products" id="nav-products">PRODUCTS</a></li>
+        </ul>
+        <button class="lang-btn" id="langBtn">EN / ES</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow" id="hero-eyebrow">— INNOVATIVE SOFTWARE & AI —</p>
+        <h1 class="hero-title">
+            <span class="line1" id="hero-line1">BOOLEK</span>
+            <span class="line2" id="hero-line2">AI SOLUTIONS</span>
+        </h1>
+        <p class="hero-sub" id="hero-sub">
+            Developing cutting-edge software powered by deep learning and artificial intelligence, helping your business reach new heights — always at an accessible price.
+        </p>
+        <div class="hero-cta">
+            <a href="#products" class="btn-primary-glow" id="cta-products">Explore Products</a>
+            <a href="#smartver" class="btn-outline-glow" id="cta-learn">Learn More</a>
+        </div>
+    </div>
+    <div class="hero-scroll">
+        <div class="line"></div>
+        <span>SCROLL</span>
+    </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+    <div class="stat">
+        <div class="stat-num">AI</div>
+        <div class="stat-label" id="stat1">Powered</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">9+</div>
+        <div class="stat-label" id="stat2">Products</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label" id="stat3">Languages</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">∞</div>
+        <div class="stat-label" id="stat4">Possibilities</div>
+    </div>
+</div>
+
+<!-- PRODUCT SHOWCASES -->
+<section class="product-showcase" id="smartver">
+    <div class="showcase-inner">
+        <div class="showcase-row reveal">
+            <div class="showcase-text">
+                <span class="section-label">FEATURED PRODUCT</span>
+                <h2>SMARTVER</h2>
+                <p id="smartver-desc">
+                    Smartver is an ideal tool for waiting rooms that runs locally on Windows. Stream your voice into the waiting room from your PC or phone, inform through synthesized text-to-speech in any language, and detect suspicious objects with an AI-powered smart camera module.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag">DEEP LEARNING</span>
+                    <span class="tag">TEXT-TO-SPEECH</span>
+                    <span class="tag">OBJECT DETECTION</span>
+                    <span class="tag">LOCAL / OFFLINE</span>
+                    <span class="tag">WINDOWS</span>
+                </div>
+                <a href="#products" class="btn-outline-glow" id="smartver-cta">View Products</a>
+            </div>
+            <div class="showcase-media">
+                <div class="corner-tl"></div>
+                <div class="corner-br"></div>
+                <iframe id="smartver-video" src="https://www.youtube.com/embed/DHddTVPYIwE?si=BLmTXA8IZPTYTjQv" title="Smartver" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="showcase-row reverse reveal" id="dubyet">
+            <div class="showcase-text">
+                <span class="section-label">AI DUBBING</span>
+                <h2>DUBYET <span style="font-size:0.5em; color: var(--text-dim);">+ MIXBEEN</span></h2>
+                <p id="dubyet-desc">
+                    DUBYET is a professional AI-powered audio translation and dubbing software that converts audio and video into other languages while preserving original timing and structure. MIXBEEN complements this with precise, fully local audio-video mixing and synchronization.
+                </p>
+                <div class="feature-tags">
+                    <span class="tag">AI TRANSLATION</span>
+                    <span class="tag">VOICE GENERATION</span>
+                    <span class="tag">LOCAL PROCESSING</span>
+                    <span class="tag">MULTI-LANGUAGE</span>
+                </div>
+                <a href="#dub-products" class="btn-outline-glow" id="dubyet-cta">View Products</a>
+            </div>
+            <div class="showcase-media">
+                <div class="corner-tl"></div>
+                <div class="corner-br"></div>
+                <iframe id="dubyet-video" src="https://www.youtube.com/embed/QdkTdNoiays?si=SEJZeCkrsQIjMjH1" title="Dubyet" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SMARTVER PRODUCTS -->
+<section class="products-section" id="products">
+    <div class="products-inner">
+        <div class="products-header reveal">
+            <p class="section-label">SMARTVER LINEUP</p>
+            <h2 class="section-title" id="products-title">Products & <span>Solutions</span></h2>
+        </div>
+        <div class="products-grid">
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <iframe src="https://www.youtube.com/embed/eoXjz5u39jA?si=CsYpqsjfV-uvKgry" allowfullscreen></iframe>
+                </div>
+                <div class="card-body">
+                    <span class="card-badge">WAITING ROOM</span>
+                    <h3 class="card-title">Smartver Waiting Room V1.5</h3>
+                    <p class="card-desc" id="p0-desc">Ideal for waiting rooms.</p>
+                    <a target="_blank" href="https://ko-fi.com/s/1eb50633e0" class="card-action" id="p0-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="p0-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <iframe src="https://www.youtube.com/embed/yCHqAlOxRjc?si=Mz_lLIhb9lIX3bTO" allowfullscreen></iframe>
+                </div>
+                <div class="card-body">
+                    <span class="card-badge">ADVERTISING</span>
+                    <h3 class="card-title">Smartver Advertising Screen V1.6</h3>
+                    <p class="card-desc" id="p1-desc">For advertising announcements.</p>
+                    <a target="_blank" href="https://ko-fi.com/s/80e0f2ebb0" class="card-action" id="p1-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="p1-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <img src="https://raw.githubusercontent.com/boolekpage/boolekpage.github.io/main/SMART.png" alt="Smartver All in One">
+                </div>
+                <div class="card-body">
+                    <span class="card-badge">2-IN-1 BUNDLE</span>
+                    <h3 class="card-title">Smartver All in One V1.6</h3>
+                    <p class="card-desc" id="p3-desc">Waiting Room and Advertising Screen at a more affordable price.</p>
+                    <a target="_blank" href="https://ko-fi.com/s/2bbaf6791e" class="card-action" id="p3-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="p3-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <iframe src="https://www.youtube.com/embed/RDePmEOnbj8?si=rNOYCepFEuAFpk3Z" allowfullscreen></iframe>
+                </div>
+                <div class="card-body">
+                    <span class="card-badge" style="border-color:rgba(123,47,255,0.4);color:#a57fff;background:rgba(123,47,255,0.08)">AI POWERED</span>
+                    <h3 class="card-title">Smartver AI V1.6</h3>
+                    <p class="card-desc" id="p6-desc">AI-powered audio-to-text dubbing.</p>
+                    <a target="_blank" href="https://ko-fi.com/s/fc8bb6a644" class="card-action" id="p6-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="p6-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <img src="https://raw.githubusercontent.com/boolekpage/boolekpage.github.io/main/smartver%20app.jpg" alt="Smartver App">
+                </div>
+                <div class="card-body">
+                    <span class="card-badge" style="border-color:rgba(50,255,50,0.3);color:#4dff7c;background:rgba(50,255,50,0.05)">FREE</span>
+                    <h3 class="card-title">Smartver APP Android</h3>
+                    <p class="card-desc" id="p4-desc">Free application to manage Smartver from your smartphone.</p>
+                    <a target="_blank" href="https://github.com/boolekpage/Smartver-Apps.git" class="card-action free" id="p4-btn">
+                        <i class="fa fa-download" style="font-size:12px"></i>
+                        <span id="p4-action">Download</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <img src="https://raw.githubusercontent.com/boolekpage/boolekpage.github.io/main/smartver%20tv%20app.png" alt="Smartver TV">
+                </div>
+                <div class="card-body">
+                    <span class="card-badge" style="border-color:rgba(50,255,50,0.3);color:#4dff7c;background:rgba(50,255,50,0.05)">FREE</span>
+                    <h3 class="card-title">Smartver TV Android</h3>
+                    <p class="card-desc" id="p5-desc">Free application to open the waiting room on your SmartTV.</p>
+                    <a target="_blank" href="https://github.com/boolekpage/Smartver-Apps.git" class="card-action free" id="p5-btn">
+                        <i class="fa fa-download" style="font-size:12px"></i>
+                        <span id="p5-action">Download</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DUB PRODUCTS -->
+<section class="products-section" id="dub-products" style="background: var(--bg);">
+    <div class="products-inner">
+        <div class="products-header reveal">
+            <p class="section-label">AI AUDIO TOOLS</p>
+            <h2 class="section-title">DUBYET <span>& MIXBEEN</span></h2>
+        </div>
+        <div class="products-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <img src="https://raw.githubusercontent.com/boolekpage/boolekpage.github.io/refs/heads/main/dubye.png" alt="DUBYET">
+                </div>
+                <div class="card-body">
+                    <span class="card-badge" style="border-color:rgba(123,47,255,0.4);color:#a57fff;background:rgba(123,47,255,0.08)">AI DUBBING</span>
+                    <h3 class="card-title">DUBYET V1.0</h3>
+                    <p class="card-desc" id="dp0-desc">AI-powered audio-to-text dubbing and translation.</p>
+                    <a target="_blank" href="" class="card-action" id="dp0-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="dp0-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <img src="https://raw.githubusercontent.com/boolekpage/boolekpage.github.io/refs/heads/main/mixbeen.png" alt="MIXBEEN">
+                </div>
+                <div class="card-body">
+                    <span class="card-badge">AUDIO-VIDEO</span>
+                    <h3 class="card-title">MIXBEEN V1.0</h3>
+                    <p class="card-desc" id="dp1-desc">Mix audio and video files with precision.</p>
+                    <a target="_blank" href="" class="card-action" id="dp1-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="dp1-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card reveal">
+                <div class="card-media">
+                    <img src="https://raw.githubusercontent.com/boolekpage/boolekpage.github.io/refs/heads/main/FOTO.PNG" alt="DUB PACK">
+                </div>
+                <div class="card-body">
+                    <span class="card-badge" style="border-color:rgba(255,45,120,0.4);color:#ff6fa8;background:rgba(255,45,120,0.08)">BUNDLE</span>
+                    <h3 class="card-title">DUB PACK</h3>
+                    <p class="card-desc" id="dp2-desc">Two for a good price — DUBYET + MIXBEEN.</p>
+                    <a target="_blank" href="" class="card-action" id="dp2-btn">
+                        <i class="fa fa-cart-shopping" style="font-size:12px"></i>
+                        <span id="dp2-action">Purchase Now</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SOCIAL -->
+<section class="social-section">
+    <div class="social-inner">
+        <p class="section-label">FOLLOW THE PROJECT</p>
+        <h2 class="section-title" id="social-title">Social <span>Media</span></h2>
+        <div class="social-grid">
+            <a href="https://www.tiktok.com/@_boolek_" target="_blank" class="social-link tiktok" title="TikTok">
+                <i class="fa-brands fa-tiktok"></i>
+            </a>
+            <a href="https://www.youtube.com/@BOOLEK-fp9wx" target="_blank" class="social-link youtube" title="YouTube">
+                <i class="fa-brands fa-youtube"></i>
+            </a>
+            <a href="https://www.instagram.com/boolek1989/" target="_blank" class="social-link instagram" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://kick.com/boolek-js" target="_blank" class="social-link kick" title="Kick">
+                <i class="fa-brands fa-kickstarter"></i>
+            </a>
+            <a href="https://www.twitch.tv/boolek_js" target="_blank" class="social-link twitch" title="Twitch">
+                <i class="fa-brands fa-twitch"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-brand">BOOLEK</div>
+    <div class="footer-copy">
+        COPYRIGHT &copy; <span id="year"></span> — ALL RIGHTS RESERVED
+    </div>
+</footer>
+
+<script>
+// YEAR
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+    ring.style.left = mx - 18 + 'px';
+    ring.style.top = my - 18 + 'px';
+});
+document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
+});
+
+// PARTICLES
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.size = Math.random() * 1.5 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.5 + 0.1;
+        this.color = Math.random() > 0.7 ? '#7b2fff' : '#00f5ff';
+    }
+    update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    }
+    draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function connectParticles() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) {
+                ctx.save();
+                ctx.globalAlpha = (1 - dist/100) * 0.08;
+                ctx.strokeStyle = '#00f5ff';
+                ctx.lineWidth = 0.5;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    connectParticles();
+    requestAnimationFrame(animate);
+}
+animate();
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+            setTimeout(() => e.target.classList.add('visible'), i * 80);
+        }
+    });
+}, { threshold: 0.1 });
+reveals.forEach(r => obs.observe(r));
+
+// LANGUAGE
+const texts = {
+    EN: {
+        eyebrow: '— INNOVATIVE SOFTWARE & AI —',
+        heroSub: 'Developing cutting-edge software powered by deep learning and artificial intelligence, helping your business reach new heights — always at an accessible price.',
+        ctaProducts: 'Explore Products',
+        ctaLearn: 'Learn More',
+        stat1: 'Powered', stat2: 'Products', stat3: 'Languages', stat4: 'Possibilities',
+        smartverDesc: 'Smartver is an ideal tool for waiting rooms that runs locally on Windows. Stream your voice into the waiting room from your PC or phone, inform through synthesized text-to-speech in any language, and detect suspicious objects with an AI-powered smart camera module.',
+        smartverCta: 'View Products',
+        smartverVideo: 'https://www.youtube.com/embed/DHddTVPYIwE?si=BLmTXA8IZPTYTjQv',
+        dubVideo: 'https://www.youtube.com/embed/QdkTdNoiays?si=SEJZeCkrsQIjMjH1',
+        dubDesc: 'DUBYET is a professional AI-powered audio translation and dubbing software that converts audio and video into other languages while preserving original timing and structure. MIXBEEN complements this with precise, fully local audio-video mixing and synchronization.',
+        dubCta: 'View Products',
+        productsTitle: 'Products & Solutions',
+        navSmartver: 'SMARTVER', navDubyet: 'DUBYET', navProducts: 'PRODUCTS',
+        p: ['Ideal for waiting rooms.','For advertising announcements.','','Waiting Room and Advertising Screen at a more affordable price.','Free application to manage Smartver from your smartphone.','Free application to open the waiting room on your SmartTV.','AI-powered audio-to-text dubbing.','Mix Audio and Video files.','Two for a good price — DUBYET + MIXBEEN.'],
+        a: ['Purchase Now','Purchase Now','','Purchase Now','Download','Download','Purchase Now','Purchase Now','Purchase Now'],
+        lang: 'EN / ES'
+    },
+    ES: {
+        eyebrow: '— SOFTWARE INNOVADOR CON IA —',
+        heroSub: 'Desarrollamos software innovador que integra lo último en deep learning e inteligencia artificial, ayudando a tu negocio a alcanzar nuevas alturas — siempre a un precio accesible.',
+        ctaProducts: 'Ver Productos',
+        ctaLearn: 'Saber Más',
+        stat1: 'Potenciado', stat2: 'Productos', stat3: 'Idiomas', stat4: 'Posibilidades',
+        smartverDesc: 'Smartver es una herramienta ideal para salas de espera que puede ejecutarse en Windows de manera local. Integra la capacidad de transmitir su voz desde el micrófono de su PC o teléfono, puede informar mediante una voz sintetizada en cualquier idioma, y detectar objetos sospechosos con su módulo de cámara inteligente con IA.',
+        smartverCta: 'Ver Productos',
+        smartverVideo: 'https://www.youtube.com/embed/X3OL3amswKc?si=BxN7pa74gZ4Z5cu6',
+        dubVideo: 'https://www.youtube.com/embed/kBcBFyA13bU?si=MqnkPiDaLorZg25Q',
+        dubDesc: 'DUBYET es un software de traducción y doblaje de audio con IA que permite transcribir, traducir y generar voces dobladas automáticamente, respetando los tiempos del audio original. MIXBEEN complementa esto permitiendo mezclar y sincronizar audio y video de forma precisa y local.',
+        dubCta: 'Ver Productos',
+        productsTitle: 'Productos & Soluciones',
+        navSmartver: 'SMARTVER', navDubyet: 'DUBYET', navProducts: 'PRODUCTOS',
+        p: ['Ideal para salas de espera.','Para anuncios publicitarios.','','Waiting Room y Advertising Screen a un precio más económico.','Aplicación gratis para manejar Smartver desde tu SmartPhone.','Aplicación gratis para abrir la sala de espera en tu SmartTV.','Doblaje y traducción con IA.','Mezcla Audio con Video.','Dos por buen precio — DUBYET + MIXBEEN.'],
+        a: ['Adquirir','Adquirir','','Adquirir','Descargar','Descargar','Adquirir','Adquirir','Adquirir'],
+        lang: 'ES / EN'
+    }
+};
+
+let currentLang = localStorage.getItem('boolekLang') || 'EN';
+
+function applyLang(lang) {
+    const t = texts[lang];
+    document.getElementById('hero-eyebrow').textContent = t.eyebrow;
+    document.getElementById('hero-sub').textContent = t.heroSub;
+    document.getElementById('cta-products').textContent = t.ctaProducts;
+    document.getElementById('cta-learn').textContent = t.ctaLearn;
+    document.getElementById('stat1').textContent = t.stat1;
+    document.getElementById('stat2').textContent = t.stat2;
+    document.getElementById('stat3').textContent = t.stat3;
+    document.getElementById('stat4').textContent = t.stat4;
+    document.getElementById('smartver-desc').textContent = t.smartverDesc;
+    document.getElementById('smartver-cta').textContent = t.smartverCta;
+    document.getElementById('smartver-video').src = t.smartverVideo;
+    document.getElementById('dubyet-video').src = t.dubVideo;
+    document.getElementById('dubyet-desc').textContent = t.dubDesc;
+    document.getElementById('dubyet-cta').textContent = t.dubCta;
+    document.getElementById('products-title').innerHTML = t.productsTitle.replace('&', '&amp;').replace('Solutions', '<span>Solutions</span>').replace('Soluciones', '<span>Soluciones</span>');
+    document.getElementById('nav-smartver').textContent = t.navSmartver;
+    document.getElementById('nav-dubyet').textContent = t.navDubyet;
+    document.getElementById('nav-products').textContent = t.navProducts;
+    document.getElementById('langBtn').textContent = t.lang;
+
+    const pIds = ['p0','p1','p3','p4','p5','p6'];
+    const pIdxs = [0,1,3,4,5,6];
+    pIds.forEach((id, i) => {
+        document.getElementById(id+'-desc').textContent = t.p[pIdxs[i]];
+        document.getElementById(id+'-action').textContent = t.a[pIdxs[i]];
+    });
+    document.getElementById('dp0-desc').textContent = t.p[6];
+    document.getElementById('dp0-action').textContent = t.a[6];
+    document.getElementById('dp1-desc').textContent = t.p[7];
+    document.getElementById('dp1-action').textContent = t.a[7];
+    document.getElementById('dp2-desc').textContent = t.p[8];
+    document.getElementById('dp2-action').textContent = t.a[8];
+}
+
+applyLang(currentLang);
+
+document.getElementById('langBtn').addEventListener('click', () => {
+    currentLang = currentLang === 'EN' ? 'ES' : 'EN';
+    localStorage.setItem('boolekLang', currentLang);
+    applyLang(currentLang);
+});
+</script>
+</body>
+</html>
