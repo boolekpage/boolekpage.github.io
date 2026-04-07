@@ -648,6 +648,53 @@
         }
         .corner-tl { top: 0; left: 0; border-top: 2px solid var(--primary); border-left: 2px solid var(--primary); }
         .corner-br { bottom: 0; right: 0; border-bottom: 2px solid var(--primary); border-right: 2px solid var(--primary); }
+
+                /* BOTÓN FLOTANTE */
+          .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7b2cff, #b84cff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(123, 44, 255, 0.6),
+                        0 0 30px rgba(184, 76, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+          }
+        
+          /* Efecto hover */
+          .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(123, 44, 255, 0.9),
+                        0 0 50px rgba(184, 76, 255, 0.7);
+          }
+        
+          /* Imagen dentro del botón */
+          .floating-btn img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            pointer-events: none;
+          }
+        
+          /* efecto glow animado (opcional) */
+          .floating-btn::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7b2cff, #b84cff);
+            filter: blur(15px);
+            opacity: 0.6;
+            z-index: -1;
+          }
     </style>
 </head>
 <body>
@@ -973,6 +1020,11 @@
     </div>
 </section>
 
+    <!-- BOTÓN -->
+<a href="https://boolekpage.github.io/loola.github.io/" target="_blank" class="floating-btn">
+  <img src="./loola.png" alt="icon">
+</a>
+    
 <!-- FOOTER -->
 <footer>
     <div class="footer-brand">BOOLEK</div>
